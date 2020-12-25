@@ -1,0 +1,215 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+
+	Gestion des Categories
+
+{% endblock %}
+
+
+{% block javascripts %}
+
+	{{parent()}}
+	<!-- Page level plugins -->
+	<script src="{{asset("vendor/datatables/jquery.dataTables.min.js")}}"></script>
+	<script src="{{asset("vendor/datatables/dataTables.bootstrap4.min.js")}}"></script>
+
+	<!-- Page level custom scripts -->
+
+	<script>
+		$(document).ready(function () {
+$('#dataTable').DataTable({
+language: {
+processing: "Traitement en cours...",
+search: "Rechercher&nbsp;:",
+lengthMenu: "Afficher _MENU_ &eacute;l&eacute;ments",
+info: "Affichage de l'&eacute;lement _START_ &agrave; _END_ sur _TOTAL_ &eacute;l&eacute;ments",
+infoEmpty: "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
+infoFiltered: "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
+infoPostFix: "",
+loadingRecords: "Chargement en cours...",
+zeroRecords: "Aucun &eacute;l&eacute;ment &agrave; afficher",
+emptyTable: "Aucune donnée disponible dans le tableau",
+paginate: {
+first: "Premier",
+previous: "Pr&eacute;c&eacute;dent",
+next: "Suivant",
+last: "Dernier"
+},
+aria: {
+sortAscending: ": activer pour trier la colonne par ordre croissant",
+sortDescending: ": activer pour trier la colonne par ordre décroissant"
+}
+},
+lengthMenu: [
+5,
+10,
+25,
+50,
+100
+]
+
+});
+});
+
+
+const decon = document.getElementById('dialog');
+
+if (decon != null) {
+decon.addEventListener("click", e => {
+if (!confirm('Voulez vous supprimer l\'element ?')) {
+e.preventDefault();
+}
+});
+}
+
+
+/*
+$(function () {
+$("#dialog-confirm").dialog({
+resizable: false,
+height: "auto",
+width: 400,
+modal: true,
+buttons: {
+"Delete all items": function () {
+$(this).dialog("close");
+},
+Cancel: function () {
+$(this).dialog("close");
+}
+}
+});
+});
+
+$("#dialog").dialog({
+autoOpen: false,
+width: 400,
+buttons: [
+{
+text: "Ok",
+click: function () {
+$(this).dialog("close");
+}
+}, {
+text: "Cancel",
+click: function () {
+$(this).dialog("close");
+}
+}
+]
+});
+
+// Link to open the dialog
+$("#dialog-link").click(function (event) {
+$("#dialog").dialog("open");
+event.preventDefault();
+});
+
+$("#dialog-link, #icons li").hover(function () {
+$(this).addClass("ui-state-hover");
+}, function () {
+$(this).removeClass("ui-state-hover");
+});
+*/
+	</script>
+{% endblock %}
+
+{% block body %}
+	<div class="row">
+		<div class="col-12 w-100">
+
+			{{ form_start(form,
+		{"attr":
+		{"class":"form-inline mt-3"}
+		})
+		
+		 }}
+
+			<div class="form-group ml-5 my-2">
+				<label for="">{{form_label(form.libelle)}}</label>
+				{{form_widget(form.libelle,{"attr":{"class":"form-control"}})}}
+				{{form_row(form.Enregistrer)}}
+
+
+				<small id="helpId" class="text-muted">{{form_errors(form.libelle)}}</small>
+
+
+			</div>
+
+
+			{{ form_end(form) }}
+		</div>
+
+
+	</div>
+	<!-- DataTales Example -->
+	<div class="card shadow mb-4">
+		<div class="card-header py-3">
+			<h6 class="m-0 font-weight-bold text-primary">Liste des catégories</h6>
+		</div>
+		<div class="card-body">
+			<div class="table-responsive">
+				<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+					<thead>
+						<tr>
+							<th class="w-25">Id</th>
+							<th class="w-25">libelle</th>
+							<th class="w-50">Actions</th>
+
+
+						</tr>
+					</thead>
+					<tfoot>
+						<tr>
+							<th>Id</th>
+							<th>libelle</th>
+							<th>Actions</th>
+
+
+						</tr>
+					</tfoot>
+					<tbody>
+						{% for categorie in categories %}
+
+
+							<tr>
+								<td>{{categorie.id}}</td>
+								<td>{{categorie.libelle}}</td>
+								<td>
+									<a href="#" class="btn btn-primary btn-icon-split">
+
+										<span class="icon text-white-50">
+											<i class="fas fa-list"></i>
+										</span>
+										<span class="text">Mes Articles</span>
+									</a>
+									<a href="{{path("categorie_show",{id:categorie.id})}}" class="btn btn-warning btn-icon-split">
+
+										<span class="icon text-white-50">
+											<i class="fas fa-exclamation-triangle"></i>
+
+										</span>
+										<span class="text">Modifier</span>
+									</a>
+
+									<a href="{{path("categorie_delete",{id:categorie.id})}}" class="btn btn-danger btn-icon-split btn_delete">
+
+
+										<span class="icon text-white-50">
+											<i class="fas fa-trash"></i>
+										</span>
+										<span class="text">Supprimer</span>
+									</a>
+
+
+								</td>
+							</tr>
+							{% else %}Pas de Catégories !!!
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+{% endblock %}
